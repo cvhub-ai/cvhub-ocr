@@ -1,0 +1,24 @@
+[project]
+name = "cvhub-ocr"
+version = "0.1.0"
+description = "OCR Modul in CvHub"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "numpy>=1.21.0",
+    "paddleocr>=3.4.1",
+    "paddlepaddle-gpu==3.2.0",
+]
+
+[[tool.uv.index]]
+name = "paddlepaddle"
+url = "https://www.paddlepaddle.org.cn/packages/stable/cu126/"
+explicit = true
+
+[tool.uv.sources]
+paddlepaddle-gpu = { index = "paddlepaddle" }
+
+[tool.uv.workspace]
+members = [
+    "cvhub-ocr",
+]
