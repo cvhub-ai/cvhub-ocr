@@ -1,10 +1,13 @@
 from abc import ABC, abstractmethod
 import numpy as np
 
-from models import OCRResult
+from src.models import OCRResult
 
 
 class BaseEngine(ABC):
+    def __init__(self) -> None:
+        self.detector = None
+        self.recognizer = None
 
     @abstractmethod
     def build(self, config_data: dict) -> None:
