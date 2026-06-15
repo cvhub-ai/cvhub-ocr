@@ -17,7 +17,7 @@ class Preprocessor:
         self._image = cv2.GaussianBlur(
             self._image, (kernel, kernel),0
         )
-        self._history.append(f"GuassianDenoise(kernel={kernel})")
+        self._history.append(f"GaussianDenoise(kernel={kernel})")
         return self
  
     def nlm_denoise(
@@ -42,7 +42,7 @@ class Preprocessor:
     #  Sharpness
     # ------------------------------------------------------------------ #
  
-    def unsharp_mask(self,) -> "Preprocessor":
+    def unsharp_mask(self) -> "Preprocessor":
         kernel = np.array([[-1, -1, -1],
                    [-1, 17, -1],
                    [-1, -1, -1]], dtype=np.float32) / 9
