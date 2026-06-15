@@ -1,0 +1,77 @@
+syntax = "proto3";
+
+package ocr;
+
+// ------------------------------------------------------------------ //
+//  Image Request
+// ------------------------------------------------------------------ //
+
+message OCRRequest {
+  bytes  image        = 1;  // raw image bytes (JPEG / PNG binary)
+  string image_format = 2;  // "jpg", "png", etc.
+}
+
+message BatchOCRRequest {
+  repeated OCRRequest requests = 1;
+}
+
+// ------------------------------------------------------------------ //
+//  Result messages  (mirrors OCRResult dataclass)
+// ------------------------------------------------------------------ //
+
+message Point {
+  int32 x = 1;
+  int32 y = 2;
+}
+
+message BoundingBox {
+  repeated Point points = 1;  // 4 points: [x1y1, x2y2, x3y3, x4y4]
+}
+
+message DetectionResult {
+  BoundingBox bbox       = 1;
+  float       confidence = 2;
+}
+
+message RecognitionResult {
+  string text       = 1;
+  float  confidence = 2;
+}
+
+message OCRResult {
+  DetectionResult   det_result = 1;
+  RecognitionResult rec_result = 2;
+}
+
+message OCRResponse {
+  repeated OCRResult results            = 1;
+  float              processing_time_ms = 2;
+  string             error              = 3;  // empty = success
+}
+
+message BatchOCRResponse {
+  repeated OCRResponse responses = 1;  // one per image
+}
+
+// ------------------------------------------------------------------ //
+//  Engine management
+// ------------------------------------------------------------------ //
+
+message RebuildEngineRequest {
+  string engine_type = 1;  // must match EngineType enum, e.g. "PADDLE_OCR"
+}
+
+message RebuildEngineResponse {
+  bool   success = 1;
+  string error   = 2;
+}
+
+// ------------------------------------------------------------------ //
+//  Service
+// ------------------------------------------------------------------ //
+
+service OCRService {
+  rpc Recognize      (OCRRequest)           returns (OCRResponse);
+  rpc BatchRecognize (BatchOCRRequest)      returns (BatchOCRResponse);
+  rpc RebuildEngine  (RebuildEngineRequest) returns (RebuildEngineResponse);
+}
