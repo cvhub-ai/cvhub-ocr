@@ -35,7 +35,7 @@ class PaddleDetector(BaseDetector):
         detection_results = []
         for det_poly, det_score in zip(det_polys, det_scores):
             detection_results.append(
-                DetectionResult(det_poly, det_score)
+                DetectionResult(det_poly.tolist(), det_score)
             )
         return detection_results
     
