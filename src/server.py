@@ -141,7 +141,7 @@ def serve(host: str = "0.0.0.0", port: int = 50051, max_workers: int = 4) -> Non
     default_config = get_paddleocr_config()
 
     logger.info(f"Building default engine ({EngineType.PADDLE_OCR.value})...")
-    default_engine = EngineFactory.create(EngineType.PADDLE_OCR, default_config)
+    default_engine = EngineFactory.create_engine(EngineType.PADDLE_OCR, default_config)
 
     logger.info(f"Starting gRPC server on {host}:{port}")
     grpc_server = grpc.server(futures.ThreadPoolExecutor(max_workers=max_workers))
