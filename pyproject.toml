@@ -5,6 +5,8 @@ description = "OCR Modul in CvHub"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
+    "grpcio>=1.81.1",
+    "grpcio-tools>=1.81.1",
     "numpy>=1.21.0",
     "paddleocr>=3.4.1",
     "paddlepaddle-gpu==3.2.0",
