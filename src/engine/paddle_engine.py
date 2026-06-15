@@ -43,7 +43,7 @@ class PaddleOCREngine(BaseEngine):
             if detection_result.confidence < 0.5:
                 continue
 
-            text_roi = Utils.extract_text_roi(detection_result.bbox)
+            text_roi = Utils.extract_text_roi(image, detection_result.bbox)
             recognition_result: RecognitionResult|None = self.recognizer.recognize(text_roi)
             if recognition_result is None:
                 continue
