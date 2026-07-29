@@ -1,10 +1,10 @@
 import numpy as np
 
-from ocr.recognizer.paddle_recognizer import PaddleRecognizer
-from ocr.detector.paddle_detector import PaddleDetector
-from models.ocr_result import DetectionResult, OCRResult, RecognitionResult
-from ocr.engine.base_engine import BaseEngine
-from shared.utils.utils import Utils
+from src.models.ocr_result import DetectionResult, OCRResult, RecognitionResult
+from src.ocr.detector.paddle_detector import PaddleDetector
+from src.ocr.recognizer.paddle_recognizer import PaddleRecognizer
+from src.ocr.engine.base_engine import BaseEngine
+from src.shared.utils.utils import Utils
 
 class PaddleOCREngine(BaseEngine):
     def __init__(self) -> None:

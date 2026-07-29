@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 import numpy as np
 
-from models.ocr_result import OCRResult
+from src.models.ocr_result import OCRResult
 
 
 class BaseEngine(ABC):
