@@ -5,6 +5,7 @@ description = "OCR Modul in CvHub"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
+    "dotenv>=0.9.9",
     "grpcio>=1.81.1",
     "grpcio-tools>=1.81.1",
     "numpy>=1.21.0",
