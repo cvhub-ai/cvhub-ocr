@@ -1,7 +1,7 @@
 import pytest
-from src.models import RecognitionResult
-from src.recognizer.paddle_recognizer import PaddleRecognizer
-from src.config.config_loader import get_paddleocr_config
+from models.ocr_result import RecognitionResult
+from ocr.recognizer.paddle_recognizer import PaddleRecognizer
+from config.config_loader import get_paddleocr_config
 
 
 def test_recognizer_loads_model():

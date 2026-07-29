@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 import pytest
  
-from src.utils.utils import Utils
+from shared.utils.utils import Utils
 
 @pytest.fixture
 def sample_image() -> np.ndarray:

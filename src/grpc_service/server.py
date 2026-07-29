@@ -15,11 +15,11 @@ import cv2
 import grpc
 import numpy as np
 
-from proto import ocr_pb2, ocr_pb2_grpc
-from src.config.config_loader import get_paddleocr_config
-from src.preprocess.image_processor import Preprocessor
-from src.engine.engine_factory import EngineFactory    # returns a concrete BaseEngine
-from src.models import EngineType, OCRResult
+from src.grpc.generated import ocr_pb2, ocr_pb2_grpc
+from config.config_loader import get_paddleocr_config
+from ocr.preprocess.image_processor import Preprocessor
+from ocr.engine.engine_factory import EngineFactory    # returns a concrete BaseEngine
+from models.ocr_result import EngineType, OCRResult
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger(__name__)

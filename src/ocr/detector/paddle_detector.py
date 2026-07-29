@@ -1,8 +1,8 @@
 import numpy as np
 from paddleocr import TextDetection
 
-from src.detector.base_detector import BaseDetector
-from src.models import DetectionResult
+from ocr.detector.base_detector import BaseDetector
+from models.ocr_result import DetectionResult
 
 class PaddleDetector(BaseDetector):
     def __init__(self, config_data: dict) -> None:

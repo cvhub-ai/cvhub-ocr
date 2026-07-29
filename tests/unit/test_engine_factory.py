@@ -1,8 +1,8 @@
 import pytest
 
-from src.engine.engine_factory import EngineFactory
-from src.engine.paddle_engine import PaddleOCREngine
-from src.models import EngineType
+from ocr.engine.engine_factory import EngineFactory
+from ocr.engine.paddle_engine import PaddleOCREngine
+from models.ocr_result import EngineType
 
 def test_factory_returns_paddle_engine(mocker):
     mocker.patch.object(PaddleOCREngine, "build")

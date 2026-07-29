@@ -1,7 +1,7 @@
 import pytest
-from src.models import DetectionResult
-from src.detector.paddle_detector import PaddleDetector
-from src.config.config_loader import get_paddleocr_config
+from models.ocr_result import DetectionResult
+from src.ocr.detector.paddle_detector import PaddleDetector
+from config.config_loader import get_paddleocr_config
 
 
 def test_detector_loads_model():

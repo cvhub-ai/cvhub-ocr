@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 import numpy as np
 
-from src.models import DetectionResult, RecognitionResult
+from models.ocr_result import DetectionResult, RecognitionResult
 
 class BaseRecognizer(ABC):
 

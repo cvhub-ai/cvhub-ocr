@@ -1,7 +1,7 @@
 import pytest
 import numpy as np
 
-from src.preprocess.image_processor import Preprocessor
+from ocr.preprocess.image_processor import Preprocessor
 
 @pytest.fixture
 def sample_image() -> np.ndarray:

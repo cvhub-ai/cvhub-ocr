@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 import numpy as np
 
-from src.models import DetectionResult
+from models.ocr_result import DetectionResult
 
 class BaseDetector(ABC):
     @abstractmethod

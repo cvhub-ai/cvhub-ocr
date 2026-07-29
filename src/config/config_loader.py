@@ -1,9 +1,9 @@
 from pathlib import Path
 import yaml
 
+import os
 
-CONFIG_PATH = Path(__file__).parent / "config.yml"
-
+CONFIG_PATH = os.environ["CONFIG_PATH"]
 
 def load_config() -> dict:
     with open(CONFIG_PATH, "r") as f:
