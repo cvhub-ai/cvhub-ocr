@@ -1,29 +1,16 @@
+from abc import ABC, abstractmethod
 import numpy as np
 
-from src.models.ocr_result import DetectionResult, OCRResult, RecognitionResult
-from src.ocr.detector.paddle_detector import PaddleDetector
-from src.ocr.recognizer.paddle_recognizer import PaddleRecognizer
-from src.ocr.engine.base_engine import BaseEngine
+from src.ocr.detector.base_detector import BaseDetector
+from src.ocr.recognizer.base_recognizer import BaseRecognizer
 from src.shared.utils.utils import Utils
+from src.models.ocr_result import DetectionResult, OCRResult, RecognitionResult
 
-class PaddleOCREngine(BaseEngine):
+
+class OCREngine:
     def __init__(self) -> None:
-        super().__init__()
-
-    def build(self, config_data: dict) -> None:
-        """Initialize and load all components (detector, recognizer, etc.)."""
-        config_detector = config_data.get('detector', None)
-        config_recognizer = config_data.get('recognizer', None)
-
-        if (config_detector is None or config_recognizer is None):
-            return;
-
-        self.detector = PaddleDetector(config_detector)
-        self.detector.load_model()
-
-        self.recognizer = PaddleRecognizer(config_recognizer)
-        self.recognizer.load_model()
-
+        self.detector: BaseDetector
+        self.recognizer: BaseRecognizer
 
     def run(self, image: np.ndarray) -> list[OCRResult]:
         """
