@@ -1,6 +1,7 @@
-import pytest
 from pathlib import Path
-from src.config.config_loader import load_config, get_paddleocr_config
+
+from src.config.config_loader import get_paddleocr_config, load_config
+
 
 def test_load_config_returns_dict():
     config = load_config()

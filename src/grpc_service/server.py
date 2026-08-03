@@ -7,27 +7,30 @@ Startup sequence:
     3. serve requests: decode bytes → preprocess → engine.run → response
 """
 
-import time
 import logging
+import time
 from concurrent import futures
 
 import cv2
 import grpc
 import numpy as np
-
 from src.grpc.generated import ocr_pb2, ocr_pb2_grpc
-from config.config_loader import get_paddleocr_config
-from ocr.preprocess.image_processor import Preprocessor
-from ocr.engine.engine_factory import EngineFactory    # returns a concrete BaseEngine
-from models.ocr_result import EngineType, OCRResult
 
-logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
+from config.config_loader import get_paddleocr_config
+from models.ocr_result import EngineType, OCRResult
+from ocr.engine.engine_factory import EngineFactory  # returns a concrete BaseEngine
+from ocr.preprocess.image_processor import Preprocessor
+
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s"
+)
 logger = logging.getLogger(__name__)
 
 
 # ------------------------------------------------------------------ #
 #  Helpers
 # ------------------------------------------------------------------ #
+
 
 def _decode_image(image_bytes: bytes) -> np.ndarray:
     """Decode raw image bytes → BGR numpy array."""
@@ -40,31 +43,26 @@ def _decode_image(image_bytes: bytes) -> np.ndarray:
 
 def _preprocess(image: np.ndarray) -> np.ndarray:
     """Run preprocessing pipeline and return result array."""
-    return (
-        Preprocessor(image)
-        .gaussian_denoise(kernel=3)
-        .unsharp_mask()
-        .result()
-    )
+    return Preprocessor(image).gaussian_denoise(kernel=3).unsharp_mask().result()
 
 
-def _ocr_result_to_proto(result: OCRResult) -> ocr_pb2.OCRResult: # type: ignore
+def _ocr_result_to_proto(result: OCRResult) -> ocr_pb2.OCRResult:  # type: ignore
     """Convert dataclass OCRResult → proto OCRResult message."""
     points = [
-        ocr_pb2.Point(x=pt[0], y=pt[1]) # type: ignore
+        ocr_pb2.Point(x=pt[0], y=pt[1])  # type: ignore
         for pt in result.det_result.bbox
     ]
-    bbox = ocr_pb2.BoundingBox(points=points) # type: ignore
+    bbox = ocr_pb2.BoundingBox(points=points)  # type: ignore
 
-    det = ocr_pb2.DetectionResult( # type: ignore
+    det = ocr_pb2.DetectionResult(  # type: ignore
         bbox=bbox,
         confidence=result.det_result.confidence,
     )
-    rec = ocr_pb2.RecognitionResult( # type: ignore
+    rec = ocr_pb2.RecognitionResult(  # type: ignore
         text=result.rec_result.text,
         confidence=result.rec_result.confidence,
     )
-    return ocr_pb2.OCRResult(det_result=det, rec_result=rec) # type: ignore
+    return ocr_pb2.OCRResult(det_result=det, rec_result=rec)  # type: ignore
 
 
 def _process_single(image_bytes: bytes, engine) -> tuple[list[OCRResult], float]:
@@ -86,20 +84,21 @@ def _process_single(image_bytes: bytes, engine) -> tuple[list[OCRResult], float]
 #  Servicer
 # ------------------------------------------------------------------ #
 
-class OCRServicer(ocr_pb2_grpc.OCRServiceServicer): # type: ignore
+
+class OCRServicer(ocr_pb2_grpc.OCRServiceServicer):  # type: ignore
     def __init__(self, engine) -> None:
         self._engine = engine
 
     def Recognize(
         self,
-        request: ocr_pb2.OCRRequest, # type: ignore
+        request: ocr_pb2.OCRRequest,  # type: ignore
         context: grpc.ServicerContext,
-    ) -> ocr_pb2.OCRResponse: # type: ignore
+    ) -> ocr_pb2.OCRResponse:  # type: ignore
         """Handle single-image OCR request."""
         try:
             results, elapsed_ms = _process_single(request.image, self._engine)
             proto_results = [_ocr_result_to_proto(r) for r in results]
-            return ocr_pb2.OCRResponse( # type: ignore
+            return ocr_pb2.OCRResponse(  # type: ignore
                 results=proto_results,
                 processing_time_ms=elapsed_ms,
                 error="",
@@ -108,33 +107,36 @@ class OCRServicer(ocr_pb2_grpc.OCRServiceServicer): # type: ignore
             logger.exception("Recognize failed")
             context.set_code(grpc.StatusCode.INTERNAL)
             context.set_details(str(e))
-            return ocr_pb2.OCRResponse(error=str(e)) # type: ignore
+            return ocr_pb2.OCRResponse(error=str(e))  # type: ignore
 
     def BatchRecognize(
         self,
-        request: ocr_pb2.BatchOCRRequest, # type: ignore
+        request: ocr_pb2.BatchOCRRequest,  # type: ignore
         context: grpc.ServicerContext,
-    ) -> ocr_pb2.BatchOCRResponse: # type: ignore
+    ) -> ocr_pb2.BatchOCRResponse:  # type: ignore
         """Handle batch OCR request (one response per image)."""
         responses = []
         for req in request.requests:
             try:
                 results, elapsed_ms = _process_single(req.image, self._engine)
                 proto_results = [_ocr_result_to_proto(r) for r in results]
-                responses.append(ocr_pb2.OCRResponse( # type: ignore
-                    results=proto_results,
-                    processing_time_ms=elapsed_ms,
-                    error="",
-                ))
+                responses.append(
+                    ocr_pb2.OCRResponse(  # type: ignore
+                        results=proto_results,
+                        processing_time_ms=elapsed_ms,
+                        error="",
+                    )
+                )
             except Exception as e:
                 logger.exception("BatchRecognize failed on one image")
-                responses.append(ocr_pb2.OCRResponse(error=str(e))) # type: ignore
-        return ocr_pb2.BatchOCRResponse(responses=responses) # type: ignore
+                responses.append(ocr_pb2.OCRResponse(error=str(e)))  # type: ignore
+        return ocr_pb2.BatchOCRResponse(responses=responses)  # type: ignore
 
 
 # ------------------------------------------------------------------ #
 #  Entry point
 # ------------------------------------------------------------------ #
+
 
 def serve(host: str = "0.0.0.0", port: int = 50051, max_workers: int = 4) -> None:
     logger.info(f"Loading default config ({EngineType.PADDLE_OCR.value})...")
@@ -145,7 +147,9 @@ def serve(host: str = "0.0.0.0", port: int = 50051, max_workers: int = 4) -> Non
 
     logger.info(f"Starting gRPC server on {host}:{port}")
     grpc_server = grpc.server(futures.ThreadPoolExecutor(max_workers=max_workers))
-    ocr_pb2_grpc.add_OCRServiceServicer_to_server(OCRServicer(default_engine), grpc_server) # type: ignore
+    ocr_pb2_grpc.add_OCRServiceServicer_to_server(
+        OCRServicer(default_engine), grpc_server
+    )  # type: ignore
     grpc_server.add_insecure_port(f"{host}:{port}")
     grpc_server.start()
 

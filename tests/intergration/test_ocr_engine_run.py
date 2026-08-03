@@ -1,9 +1,9 @@
-import pytest
 import numpy as np
 
 from src.models.ocr_result import DetectionResult, RecognitionResult
 from src.ocr.engine.ocr_engine import OCREngine
 from src.shared.utils.utils import Utils
+
 
 def test_run_returns_ocr_results(mocker):
     # Arrange
@@ -50,5 +50,3 @@ def test_run_returns_ocr_results(mocker):
         detection_result.bbox,
     )
     recognizer.recognize.assert_called_once_with(text_roi)
-    
-    
