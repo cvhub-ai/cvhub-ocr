@@ -3,9 +3,11 @@ import numpy as np
 
 
 class Preprocessor:
-    def __init__(self, image: np.ndarray) -> None:
-        self._image = image.copy()
+    def __init__(self) -> None:
         self._history: list[str] = []
+
+    def set_image(self, image: np.ndarray) -> None:
+        self._image = image.copy()
 
     # ------------------------------------------------------------------ #
     #  Denoise
@@ -22,8 +24,8 @@ class Preprocessor:
         template_window: int = 7,
         search_window: int = 21,
     ) -> "Preprocessor":
-        is_color = len(self._image.shape) == 3 and self._image.shape[2] == 3
-        if is_color:
+        isColor = len(self._image.shape) == 3 and self._image.shape[2] == 3
+        if isColor:
             self._image = cv2.fastNlMeansDenoisingColored(
                 self._image, None, h, h, template_window, search_window
             )
@@ -62,6 +64,9 @@ class Preprocessor:
 
     def result(self) -> np.ndarray:
         return self._image.copy()
+
+    def clearHistory(self) -> None:
+        self._history = []
 
     @property
     def history(self) -> list[str]:
