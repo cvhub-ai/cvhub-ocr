@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
- 
+
+
 class Preprocessor:
     def __init__(self, image: np.ndarray) -> None:
         self._image = image.copy()
@@ -8,18 +9,13 @@ class Preprocessor:
 
     # ------------------------------------------------------------------ #
     #  Denoise
-    # ------------------------------------------------------------------ #    
- 
-    def gaussian_denoise(
-        self,
-        kernel: int = 3
-    ) -> "Preprocessor":
-        self._image = cv2.GaussianBlur(
-            self._image, (kernel, kernel),0
-        )
+    # ------------------------------------------------------------------ #
+
+    def gaussian_denoise(self, kernel: int = 3) -> "Preprocessor":
+        self._image = cv2.GaussianBlur(self._image, (kernel, kernel), 0)
         self._history.append(f"GaussianDenoise(kernel={kernel})")
         return self
- 
+
     def nlm_denoise(
         self,
         h: float = 10,
@@ -37,42 +33,40 @@ class Preprocessor:
             )
         self._history.append(f"NLMDenoise(h={h})")
         return self
- 
+
     # ------------------------------------------------------------------ #
     #  Sharpness
     # ------------------------------------------------------------------ #
- 
+
     def unsharp_mask(self) -> "Preprocessor":
-        kernel = np.array([[-1, -1, -1],
-                   [-1, 17, -1],
-                   [-1, -1, -1]], dtype=np.float32) / 9
+        kernel = (
+            np.array([[-1, -1, -1], [-1, 17, -1], [-1, -1, -1]], dtype=np.float32) / 9
+        )
         self._image = cv2.filter2D(self._image, -1, kernel)
         self._history.append(
-            f"UnsharpMask(kernel=[[-1, -1, -1], [-1, 17, -1], [-1, -1, -1]])"
+            "UnsharpMask(kernel=[[-1, -1, -1], [-1, 17, -1], [-1, -1, -1]])"
         )
         return self
- 
+
     def laplacian_sharpen(self) -> "Preprocessor":
-        kernel = np.array([[0, -1, 0],
-                    [-1, 5, -1],
-                    [0, -1, 0]], dtype=np.float32) / 9
+        kernel = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]], dtype=np.float32) / 9
         self._image = cv2.filter2D(self._image, -1, kernel)
         self._history.append(
-            f"LaplacianSharpen(kernel=[[0, -1, 0], [-1, 5, -1], [0, -1, 0]])"
+            "LaplacianSharpen(kernel=[[0, -1, 0], [-1, 5, -1], [0, -1, 0]])"
         )
         return self
- 
+
     # ------------------------------------------------------------------ #
     #  Tools
     # ------------------------------------------------------------------ #
- 
+
     def result(self) -> np.ndarray:
         return self._image.copy()
- 
+
     @property
     def history(self) -> list[str]:
         return list(self._history)
- 
+
     def __repr__(self) -> str:
         h, w = self._image.shape[:2]
         c = self._image.shape[2] if len(self._image.shape) == 3 else 1

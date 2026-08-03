@@ -4,7 +4,7 @@ import pytest
 from src.config.config_loader import get_paddleocr_config
 from src.models.ocr_input import DetectorType, RecognizerType
 from src.ocr.engine.engine_factory import EngineFactory
-from src.ocr.engine.ocr_engine import OCREngine
+from src.ocr.engine.ocr_engine import OcrEngine
 
 
 @pytest.fixture
@@ -18,7 +18,7 @@ def rec_test_image():
 
 
 @pytest.fixture
-def engine() -> OCREngine:
+def engine() -> OcrEngine:
     config_data = get_paddleocr_config()
     engine = EngineFactory.create_engine(
         DetectorType.PADDLE, RecognizerType.PADDLE, config_data

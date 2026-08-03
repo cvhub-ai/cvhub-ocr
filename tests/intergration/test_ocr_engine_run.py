@@ -1,7 +1,7 @@
 import numpy as np
 
 from src.models.ocr_result import DetectionResult, RecognitionResult
-from src.ocr.engine.ocr_engine import OCREngine
+from src.ocr.engine.ocr_engine import OcrEngine
 from src.shared.utils.utils import Utils
 
 
@@ -32,7 +32,7 @@ def test_run_returns_ocr_results(mocker):
         return_value=text_roi,
     )
 
-    engine = OCREngine()
+    engine = OcrEngine()
     engine.detector = detector
     engine.recognizer = recognizer
 
