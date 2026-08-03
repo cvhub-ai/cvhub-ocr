@@ -6,18 +6,18 @@ from src.ocr.preprocess.image_processor import Preprocessor
 
 
 class OcrPipeline:
-    def __init__(self, ocrEngine: OcrEngine) -> None:
-        self._preProcessor = Preprocessor()
-        self._ocrEngine = ocrEngine
+    def __init__(self, ocr_engine: OcrEngine) -> None:
+        self._pre_processor = Preprocessor()
+        self._ocr_engine = ocr_engine
 
     def process(self, image: np.ndarray) -> list[OcrResult]:
         # step 1: pre processing
-        self._preProcessor.set_image(image)
-        imageProcessed = (
-            self._preProcessor.gaussian_denoise().laplacian_sharpen().result()
+        self._pre_processor.set_image(image)
+        image_processed = (
+            self._pre_processor.gaussian_denoise().laplacian_sharpen().result()
         )
 
         # setp 2: ocr engine run
-        ocrResults = self._ocrEngine.run(imageProcessed)
+        ocrResults = self._ocr_engine.run(image_processed)
 
         return ocrResults

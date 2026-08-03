@@ -20,13 +20,13 @@ service OcrService {
 // -----------------------------------------------------------------------------
 
 message RequestContext {
-    string requestId = 1;
-    string clientId = 2;
+    string request_id = 1;
+    string client_id = 2;
 }
 
 message ResponseContext {
-    string requestId = 1;
-    string clientId = 2;
+    string request_id = 1;
+    string client_id = 2;
 }
 
 // -----------------------------------------------------------------------------
@@ -60,7 +60,7 @@ message OcrBatchProcessResponse {
 }
 
 message BatchItemResult {
-  string imageId = 1;
+  string image_id = 1;
   oneof outcome {
     ImageResult result = 2;
     ItemError error = 3;
@@ -72,11 +72,11 @@ message BatchItemResult {
 // -----------------------------------------------------------------------------
 
 message ImageInput {
-  string imageId = 1;
+  string image_id = 1;
   // Raw image bytes.
   bytes data = 2;
   // MIME type, for example image/jpeg or image/png.
-  string mimeType = 3;
+  string mime_type = 3;
   // Optional original filename used for logging and debugging.
   string filename = 4;
 }
@@ -90,24 +90,24 @@ message OcrOptions {
 // -----------------------------------------------------------------------------
 
 message ImageResult {
-  int32 imageWidth = 1;
-  int32 imageHeight = 2;
+  int32 image_width = 1;
+  int32 image_height = 2;
   repeated TextRegion regions = 3;
   ProcessingMetadata metadata = 4;
 }
 
 message TextRegion {
-  DetectionRegion boundingBox = 1;
-  float detectionConfidence = 2;
+  DetectionRegion bounding_box = 1;
+  float detection_confidence = 2;
   string text = 3;
-  float recognitionConfidence = 4;
+  float recognition_confidence = 4;
 }
 
 message DetectionRegion {
-  Point topLeft = 1;
-  Point topRight = 2;
-  Point bottomRight = 3;
-  Point bottomLeft = 4;
+  Point top_left = 1;
+  Point top_right = 2;
+  Point bottom_right = 3;
+  Point bottom_left = 4;
 }
 
 message Point {
@@ -116,8 +116,8 @@ message Point {
 }
 
 message ProcessingMetadata {
-  int64 processingTimeMs = 1;
-  string pipelineVersion = 2;
+  int64 processing_time_ms = 1;
+  string pipeline_version = 2;
 }
 
 // -----------------------------------------------------------------------------
@@ -147,13 +147,13 @@ message GetCapabilitiesRequest {
 
 message GetCapabilitiesResponse {
   ResponseContext context = 1;
-  string serviceName = 2;
-  string serviceVersion = 3;
-  string pipelineVersion = 4;
-  repeated string supportedMimeTypes = 5;
-  int32 maxImageWidth = 6;
-  int32 maxImageHeight = 7;
-  int64 maxImageSizeBytes = 8;
-  int32 maxBatchSize = 9;
-  bool supportsBatchProcessing = 10;
+  string service_name = 2;
+  string service_version = 3;
+  string pipeline_version = 4;
+  repeated string supported_mime_types = 5;
+  int32 max_image_width = 6;
+  int32 max_image_height = 7;
+  int64 max_image_size_bytes = 8;
+  int32 max_batch_size = 9;
+  bool supports_batch_processing = 10;
 }

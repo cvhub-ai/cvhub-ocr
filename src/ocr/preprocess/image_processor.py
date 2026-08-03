@@ -24,8 +24,8 @@ class Preprocessor:
         template_window: int = 7,
         search_window: int = 21,
     ) -> "Preprocessor":
-        isColor = len(self._image.shape) == 3 and self._image.shape[2] == 3
-        if isColor:
+        is_color = len(self._image.shape) == 3 and self._image.shape[2] == 3
+        if is_color:
             self._image = cv2.fastNlMeansDenoisingColored(
                 self._image, None, h, h, template_window, search_window
             )
@@ -65,7 +65,7 @@ class Preprocessor:
     def result(self) -> np.ndarray:
         return self._image.copy()
 
-    def clearHistory(self) -> None:
+    def clear_history(self) -> None:
         self._history = []
 
     @property

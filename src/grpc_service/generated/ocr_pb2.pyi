@@ -24,23 +24,23 @@ IMAGE_TOO_LARGE: ItemErrorCode
 PROCESSING_FAILED: ItemErrorCode
 
 class RequestContext(_message.Message):
-    __slots__ = ("clientId", "requestId")
-    REQUESTID_FIELD_NUMBER: _ClassVar[int]
-    CLIENTID_FIELD_NUMBER: _ClassVar[int]
-    requestId: str
-    clientId: str
+    __slots__ = ("client_id", "request_id")
+    REQUEST_ID_FIELD_NUMBER: _ClassVar[int]
+    CLIENT_ID_FIELD_NUMBER: _ClassVar[int]
+    request_id: str
+    client_id: str
     def __init__(
-        self, requestId: str | None = ..., clientId: str | None = ...
+        self, request_id: str | None = ..., client_id: str | None = ...
     ) -> None: ...
 
 class ResponseContext(_message.Message):
-    __slots__ = ("clientId", "requestId")
-    REQUESTID_FIELD_NUMBER: _ClassVar[int]
-    CLIENTID_FIELD_NUMBER: _ClassVar[int]
-    requestId: str
-    clientId: str
+    __slots__ = ("client_id", "request_id")
+    REQUEST_ID_FIELD_NUMBER: _ClassVar[int]
+    CLIENT_ID_FIELD_NUMBER: _ClassVar[int]
+    request_id: str
+    client_id: str
     def __init__(
-        self, requestId: str | None = ..., clientId: str | None = ...
+        self, request_id: str | None = ..., client_id: str | None = ...
     ) -> None: ...
 
 class OcrSingleProcessRequest(_message.Message):
@@ -98,35 +98,35 @@ class OcrBatchProcessResponse(_message.Message):
     ) -> None: ...
 
 class BatchItemResult(_message.Message):
-    __slots__ = ("error", "imageId", "result")
-    IMAGEID_FIELD_NUMBER: _ClassVar[int]
+    __slots__ = ("error", "image_id", "result")
+    IMAGE_ID_FIELD_NUMBER: _ClassVar[int]
     RESULT_FIELD_NUMBER: _ClassVar[int]
     ERROR_FIELD_NUMBER: _ClassVar[int]
-    imageId: str
+    image_id: str
     result: ImageResult
     error: ItemError
     def __init__(
         self,
-        imageId: str | None = ...,
+        image_id: str | None = ...,
         result: ImageResult | _Mapping | None = ...,
         error: ItemError | _Mapping | None = ...,
     ) -> None: ...
 
 class ImageInput(_message.Message):
-    __slots__ = ("data", "filename", "imageId", "mimeType")
-    IMAGEID_FIELD_NUMBER: _ClassVar[int]
+    __slots__ = ("data", "filename", "image_id", "mime_type")
+    IMAGE_ID_FIELD_NUMBER: _ClassVar[int]
     DATA_FIELD_NUMBER: _ClassVar[int]
-    MIMETYPE_FIELD_NUMBER: _ClassVar[int]
+    MIME_TYPE_FIELD_NUMBER: _ClassVar[int]
     FILENAME_FIELD_NUMBER: _ClassVar[int]
-    imageId: str
+    image_id: str
     data: bytes
-    mimeType: str
+    mime_type: str
     filename: str
     def __init__(
         self,
-        imageId: str | None = ...,
+        image_id: str | None = ...,
         data: bytes | None = ...,
-        mimeType: str | None = ...,
+        mime_type: str | None = ...,
         filename: str | None = ...,
     ) -> None: ...
 
@@ -137,57 +137,62 @@ class OcrOptions(_message.Message):
     def __init__(self, language: str | None = ...) -> None: ...
 
 class ImageResult(_message.Message):
-    __slots__ = ("imageHeight", "imageWidth", "metadata", "regions")
-    IMAGEWIDTH_FIELD_NUMBER: _ClassVar[int]
-    IMAGEHEIGHT_FIELD_NUMBER: _ClassVar[int]
+    __slots__ = ("image_height", "image_width", "metadata", "regions")
+    IMAGE_WIDTH_FIELD_NUMBER: _ClassVar[int]
+    IMAGE_HEIGHT_FIELD_NUMBER: _ClassVar[int]
     REGIONS_FIELD_NUMBER: _ClassVar[int]
     METADATA_FIELD_NUMBER: _ClassVar[int]
-    imageWidth: int
-    imageHeight: int
+    image_width: int
+    image_height: int
     regions: _containers.RepeatedCompositeFieldContainer[TextRegion]
     metadata: ProcessingMetadata
     def __init__(
         self,
-        imageWidth: int | None = ...,
-        imageHeight: int | None = ...,
+        image_width: int | None = ...,
+        image_height: int | None = ...,
         regions: _Iterable[TextRegion | _Mapping] | None = ...,
         metadata: ProcessingMetadata | _Mapping | None = ...,
     ) -> None: ...
 
 class TextRegion(_message.Message):
-    __slots__ = ("boundingBox", "detectionConfidence", "recognitionConfidence", "text")
-    BOUNDINGBOX_FIELD_NUMBER: _ClassVar[int]
-    DETECTIONCONFIDENCE_FIELD_NUMBER: _ClassVar[int]
+    __slots__ = (
+        "bounding_box",
+        "detection_confidence",
+        "recognition_confidence",
+        "text",
+    )
+    BOUNDING_BOX_FIELD_NUMBER: _ClassVar[int]
+    DETECTION_CONFIDENCE_FIELD_NUMBER: _ClassVar[int]
     TEXT_FIELD_NUMBER: _ClassVar[int]
-    RECOGNITIONCONFIDENCE_FIELD_NUMBER: _ClassVar[int]
-    boundingBox: DetectionRegion
-    detectionConfidence: float
+    RECOGNITION_CONFIDENCE_FIELD_NUMBER: _ClassVar[int]
+    bounding_box: DetectionRegion
+    detection_confidence: float
     text: str
-    recognitionConfidence: float
+    recognition_confidence: float
     def __init__(
         self,
-        boundingBox: DetectionRegion | _Mapping | None = ...,
-        detectionConfidence: float | None = ...,
+        bounding_box: DetectionRegion | _Mapping | None = ...,
+        detection_confidence: float | None = ...,
         text: str | None = ...,
-        recognitionConfidence: float | None = ...,
+        recognition_confidence: float | None = ...,
     ) -> None: ...
 
 class DetectionRegion(_message.Message):
-    __slots__ = ("bottomLeft", "bottomRight", "topLeft", "topRight")
-    TOPLEFT_FIELD_NUMBER: _ClassVar[int]
-    TOPRIGHT_FIELD_NUMBER: _ClassVar[int]
-    BOTTOMRIGHT_FIELD_NUMBER: _ClassVar[int]
-    BOTTOMLEFT_FIELD_NUMBER: _ClassVar[int]
-    topLeft: Point
-    topRight: Point
-    bottomRight: Point
-    bottomLeft: Point
+    __slots__ = ("bottom_left", "bottom_right", "top_left", "top_right")
+    TOP_LEFT_FIELD_NUMBER: _ClassVar[int]
+    TOP_RIGHT_FIELD_NUMBER: _ClassVar[int]
+    BOTTOM_RIGHT_FIELD_NUMBER: _ClassVar[int]
+    BOTTOM_LEFT_FIELD_NUMBER: _ClassVar[int]
+    top_left: Point
+    top_right: Point
+    bottom_right: Point
+    bottom_left: Point
     def __init__(
         self,
-        topLeft: Point | _Mapping | None = ...,
-        topRight: Point | _Mapping | None = ...,
-        bottomRight: Point | _Mapping | None = ...,
-        bottomLeft: Point | _Mapping | None = ...,
+        top_left: Point | _Mapping | None = ...,
+        top_right: Point | _Mapping | None = ...,
+        bottom_right: Point | _Mapping | None = ...,
+        bottom_left: Point | _Mapping | None = ...,
     ) -> None: ...
 
 class Point(_message.Message):
@@ -199,13 +204,13 @@ class Point(_message.Message):
     def __init__(self, x: int | None = ..., y: int | None = ...) -> None: ...
 
 class ProcessingMetadata(_message.Message):
-    __slots__ = ("pipelineVersion", "processingTimeMs")
-    PROCESSINGTIMEMS_FIELD_NUMBER: _ClassVar[int]
-    PIPELINEVERSION_FIELD_NUMBER: _ClassVar[int]
-    processingTimeMs: int
-    pipelineVersion: str
+    __slots__ = ("pipeline_version", "processing_time_ms")
+    PROCESSING_TIME_MS_FIELD_NUMBER: _ClassVar[int]
+    PIPELINE_VERSION_FIELD_NUMBER: _ClassVar[int]
+    processing_time_ms: int
+    pipeline_version: str
     def __init__(
-        self, processingTimeMs: int | None = ..., pipelineVersion: str | None = ...
+        self, processing_time_ms: int | None = ..., pipeline_version: str | None = ...
     ) -> None: ...
 
 class ItemError(_message.Message):
@@ -227,46 +232,46 @@ class GetCapabilitiesRequest(_message.Message):
 class GetCapabilitiesResponse(_message.Message):
     __slots__ = (
         "context",
-        "maxBatchSize",
-        "maxImageHeight",
-        "maxImageSizeBytes",
-        "maxImageWidth",
-        "pipelineVersion",
-        "serviceName",
-        "serviceVersion",
-        "supportedMimeTypes",
-        "supportsBatchProcessing",
+        "max_batch_size",
+        "max_image_height",
+        "max_image_size_bytes",
+        "max_image_width",
+        "pipeline_version",
+        "service_name",
+        "service_version",
+        "supported_mime_types",
+        "supports_batch_processing",
     )
     CONTEXT_FIELD_NUMBER: _ClassVar[int]
-    SERVICENAME_FIELD_NUMBER: _ClassVar[int]
-    SERVICEVERSION_FIELD_NUMBER: _ClassVar[int]
-    PIPELINEVERSION_FIELD_NUMBER: _ClassVar[int]
-    SUPPORTEDMIMETYPES_FIELD_NUMBER: _ClassVar[int]
-    MAXIMAGEWIDTH_FIELD_NUMBER: _ClassVar[int]
-    MAXIMAGEHEIGHT_FIELD_NUMBER: _ClassVar[int]
-    MAXIMAGESIZEBYTES_FIELD_NUMBER: _ClassVar[int]
-    MAXBATCHSIZE_FIELD_NUMBER: _ClassVar[int]
-    SUPPORTSBATCHPROCESSING_FIELD_NUMBER: _ClassVar[int]
+    SERVICE_NAME_FIELD_NUMBER: _ClassVar[int]
+    SERVICE_VERSION_FIELD_NUMBER: _ClassVar[int]
+    PIPELINE_VERSION_FIELD_NUMBER: _ClassVar[int]
+    SUPPORTED_MIME_TYPES_FIELD_NUMBER: _ClassVar[int]
+    MAX_IMAGE_WIDTH_FIELD_NUMBER: _ClassVar[int]
+    MAX_IMAGE_HEIGHT_FIELD_NUMBER: _ClassVar[int]
+    MAX_IMAGE_SIZE_BYTES_FIELD_NUMBER: _ClassVar[int]
+    MAX_BATCH_SIZE_FIELD_NUMBER: _ClassVar[int]
+    SUPPORTS_BATCH_PROCESSING_FIELD_NUMBER: _ClassVar[int]
     context: ResponseContext
-    serviceName: str
-    serviceVersion: str
-    pipelineVersion: str
-    supportedMimeTypes: _containers.RepeatedScalarFieldContainer[str]
-    maxImageWidth: int
-    maxImageHeight: int
-    maxImageSizeBytes: int
-    maxBatchSize: int
-    supportsBatchProcessing: bool
+    service_name: str
+    service_version: str
+    pipeline_version: str
+    supported_mime_types: _containers.RepeatedScalarFieldContainer[str]
+    max_image_width: int
+    max_image_height: int
+    max_image_size_bytes: int
+    max_batch_size: int
+    supports_batch_processing: bool
     def __init__(
         self,
         context: ResponseContext | _Mapping | None = ...,
-        serviceName: str | None = ...,
-        serviceVersion: str | None = ...,
-        pipelineVersion: str | None = ...,
-        supportedMimeTypes: _Iterable[str] | None = ...,
-        maxImageWidth: int | None = ...,
-        maxImageHeight: int | None = ...,
-        maxImageSizeBytes: int | None = ...,
-        maxBatchSize: int | None = ...,
-        supportsBatchProcessing: bool | None = ...,
+        service_name: str | None = ...,
+        service_version: str | None = ...,
+        pipeline_version: str | None = ...,
+        supported_mime_types: _Iterable[str] | None = ...,
+        max_image_width: int | None = ...,
+        max_image_height: int | None = ...,
+        max_image_size_bytes: int | None = ...,
+        max_batch_size: int | None = ...,
+        supports_batch_processing: bool | None = ...,
     ) -> None: ...
