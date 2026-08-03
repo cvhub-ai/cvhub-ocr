@@ -1,0 +1,159 @@
+syntax = "proto3";
+
+package cvhub.ocr.v1;
+
+service OcrService {
+
+  // process single image
+  rpc ProcessSingleImage(OcrSingleProcessRequest) returns (OcrSingleProcessResponse);
+
+  // process multi images in one request
+  rpc ProcessBatchImages(OcrBatchProcessRequest) returns (OcrBatchProcessResponse);
+  
+  // return supported formats, service version and processing limits
+  rpc GetCapabilities(GetCapabilitiesRequest) returns (GetCapabilitiesResponse);
+
+}
+
+// -----------------------------------------------------------------------------
+// Request and Response context
+// -----------------------------------------------------------------------------
+
+message RequestContext {
+    string requestId = 1;
+    string clientId = 2;
+}
+
+message ResponseContext {
+    string requestId = 1;
+    string clientId = 2;
+}
+
+// -----------------------------------------------------------------------------
+// Single image process
+// -----------------------------------------------------------------------------
+
+message OcrSingleProcessRequest {
+  RequestContext context = 1;
+  ImageInput image = 2;
+  OcrOptions options = 3;
+}
+
+message OcrSingleProcessResponse {
+  ResponseContext context = 1;
+  ImageResult result = 2;
+}
+
+// -----------------------------------------------------------------------------
+// Batch images process
+// -----------------------------------------------------------------------------
+
+message OcrBatchProcessRequest {
+  RequestContext context = 1;
+  repeated ImageInput images = 2;
+  OcrOptions options = 3;
+}
+
+message OcrBatchProcessResponse {
+  ResponseContext context = 1;
+  repeated BatchItemResult results = 2;
+}
+
+message BatchItemResult {
+  string imageId = 1;
+  oneof outcome {
+    ImageResult result = 2;
+    ItemError error = 3;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Input
+// -----------------------------------------------------------------------------
+
+message ImageInput {
+  string imageId = 1;
+  // Raw image bytes.
+  bytes data = 2;
+  // MIME type, for example image/jpeg or image/png.
+  string mimeType = 3;
+  // Optional original filename used for logging and debugging.
+  string filename = 4;
+}
+
+message OcrOptions {
+  string language = 1;
+}
+
+// -----------------------------------------------------------------------------
+// OCR result
+// -----------------------------------------------------------------------------
+
+message ImageResult {
+  int32 imageWidth = 1;
+  int32 imageHeight = 2;
+  repeated TextRegion regions = 3;
+  ProcessingMetadata metadata = 4;
+}
+
+message TextRegion {
+  DetectionRegion boundingBox = 1;
+  float detectionConfidence = 2;
+  string text = 3;
+  float recognitionConfidence = 4;
+}
+
+message DetectionRegion {
+  Point topLeft = 1;
+  Point topRight = 2;
+  Point bottomRight = 3;
+  Point bottomLeft = 4;
+}
+
+message Point {
+  int32 x = 1;
+  int32 y = 2;
+}
+
+message ProcessingMetadata {
+  int64 processingTimeMs = 1;
+  string pipelineVersion = 2;
+}
+
+// -----------------------------------------------------------------------------
+// Batch item error
+// -----------------------------------------------------------------------------
+
+enum ItemErrorCode {
+  ITEM_ERROR_CODE_UNSPECIFIED = 0;
+  INVALID_IMAGE = 1;
+  UNSUPPORTED_FORMAT = 2;
+  IMAGE_TOO_LARGE = 3;
+  PROCESSING_FAILED = 4;
+}
+
+message ItemError {
+  ItemErrorCode code = 1;
+  string message = 2;
+}
+
+// -----------------------------------------------------------------------------
+// Capabilities
+// -----------------------------------------------------------------------------
+
+message GetCapabilitiesRequest {
+  RequestContext context = 1;
+}
+
+message GetCapabilitiesResponse {
+  ResponseContext context = 1;
+  string serviceName = 2;
+  string serviceVersion = 3;
+  string pipelineVersion = 4;
+  repeated string supportedMimeTypes = 5;
+  int32 maxImageWidth = 6;
+  int32 maxImageHeight = 7;
+  int64 maxImageSizeBytes = 8;
+  int32 maxBatchSize = 9;
+  bool supportsBatchProcessing = 10;
+}
